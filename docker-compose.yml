@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+
+  # ── Next.js App ─────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vbetreut-erp
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      # Später für Supabase / eigene DB:
+      # - DATABASE_URL=postgresql://vbetreut:passwort@db:5432/vbetreut
+      # - NEXTAUTH_SECRET=dein-geheimer-schluessel
+      # - NEXTAUTH_URL=http://localhost:3000
+    depends_on: []
+    networks:
+      - vbetreut-net
+
+  # ── PostgreSQL (auskommentiert — für spätere DB-Anbindung) ───
+  # db:
+  #   image: postgres:16-alpine
+  #   container_name: vbetreut-db
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_DB: vbetreut
+  #     POSTGRES_USER: vbetreut
+  #     POSTGRES_PASSWORD: sicheres-passwort-hier
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - vbetreut-net
+
+networks:
+  vbetreut-net:
+    driver: bridge
+
+# volumes:
+#   postgres_data:
